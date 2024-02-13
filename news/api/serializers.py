@@ -7,8 +7,9 @@ from news.models import *
 
 
 class ArticleSerializer(serializers.ModelSerializer):
-
     time_since_publication = serializers.SerializerMethodField()
+    # author = JournalistSerializer()
+    # author = serializers.StringRelatedField()
 
     class Meta:
         model = Article
@@ -19,6 +20,14 @@ class ArticleSerializer(serializers.ModelSerializer):
         now = datetime.now()
         time_delta = timesince(publication_data, now)
         return time_delta
+
+
+class JournalistSerializer(serializers.ModelSerializer):
+    articles = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='article-detail')
+    # articles = ArticleSerializer(many=True, read_only=True)
+    class Meta:
+        model = Journalist
+        fields = "__all__"
 
 
 # class ArticleSerializer(serializers.Serializer):
